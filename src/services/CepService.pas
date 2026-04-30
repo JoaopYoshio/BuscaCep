@@ -4,7 +4,8 @@ interface
 
 uses
   CepInterfaces,
-  CepProviderFallback;
+  CepProviderFallback,
+  System.RegularExpressions;
 
 type
   TEnderecoService = class
@@ -46,7 +47,7 @@ var
 begin
   CEPLimpo := ACEP.Replace('-', '').Trim;
 
-  if CEPLimpo.Length <> 8 then
+  if not TRegEx.IsMatch(CEPLimpo, '^\d{8}$') then
     raise EEnderecoNaoEncontrado.Create('CEP invalido: ' + ACEP);
 
   if not FFallback.Executar(CEPLimpo, Result) then
